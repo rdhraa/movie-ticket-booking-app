@@ -82,11 +82,10 @@ export const getAverageRating = async (req, res) => {
 
 export const getUserReviews = async (req, res) => {
     try {
-        const userId = req.user.id;  
+        const userId = req.params;  
 
         // Fetch all reviews made by the specific user
-        const reviews = await Review.find({ userId }).populate("filmId", "title").sort({ createdAt: -1 });
-
+        const reviews = await Review.find( userId ).populate("filmId", "title").sort({ createdAt: -1 });
         if (!reviews.length) {
             return res.status(404).json({ message: "No reviews found for this user" });
         }
