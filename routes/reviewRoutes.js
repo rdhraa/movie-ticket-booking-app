@@ -13,7 +13,7 @@ router.post("/add-reivew",authUser,addReview)
 router.delete("/delete-review",authUser,deleteReview)
 
 // get film reviews
-router.get('/course-reviews',getFilmReviews)
+router.get('/film-reviews',getFilmReviews)
 
 
 // film avg  rating
