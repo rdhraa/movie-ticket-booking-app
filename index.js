@@ -9,7 +9,7 @@ connectDB()
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({origin:"http://localhost:5173",credentials:true,methods:["GET","POSt","PUT","DELETE","PATCH","OPTION"]}));
+app.use(cors({origin:["http://localhost:5173","https://cinehub-lemon.vercel.app/"],credentials:true,methods:["GET","POSt","PUT","DELETE","PATCH","OPTION"]}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
