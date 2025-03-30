@@ -45,16 +45,16 @@ export const userSignup = async (req, res, next) => {
 export const userLogin = async (req, res, next) => {
     try {
         //collect user data
-        const { email, password, confirmPassword } = req.body;
+        const { email, password} = req.body;
 
         //data validation
-        if (!email || !password || !confirmPassword) {
+        if (!email || !password) {
             return res.status(400).json({ message: "all fields required" });
         }
 
-        if (password !== confirmPassword) {
-            return res.status(400).json({ message: "password not same" });
-        }
+        // if (password !== confirmPassword) {
+        //     return res.status(400).json({ message: "password not same" });
+        // }
 
         // user exist - check
         const userExist = await User.findOne({ email });

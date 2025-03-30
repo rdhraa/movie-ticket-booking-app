@@ -6,9 +6,9 @@ import { upload } from "../middlewares/multer.js";
 
 const router = e.Router();
 //get all films
-router.get("/film-list",authUser,authTheater,getAllFilms)
+router.get("/film-list",getAllFilms)
 //about a specifuc film
-router.get("/about-film/:filmId",authUser,authTheater,aboutFilm)
+router.get("/about-film/:filmId",aboutFilm)
 //add film
 router.post("/add-film",authTheater,upload.single("image"),addFilm)
 
