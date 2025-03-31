@@ -40,7 +40,11 @@ export const createTheater = async (req, res, next) => {
     // Generate a token
     const token = generateToken(newTheater._id, "theater");
 
-    res.cookie("token", token);
+    res.cookie("token", token,{
+      sameSite: NODE_ENV === "production" ? "None" : "Lax",
+      secure: NODE_ENV === "production",
+      httpOnly: NODE_ENV === "production",
+    })
     delete theaterExist._doc.password;
 
     res.json({ data: newTheater, message: "Theater created successfully" });
@@ -76,7 +80,11 @@ export const theaterLogin = async (req, res, next) => {
 
     // Generate token
     const token = generateToken(theaterExist._id, "theater");
-    res.cookie("token", token);
+    res.cookie("token", token,{
+      sameSite: NODE_ENV === "production" ? "None" : "Lax",
+      secure: NODE_ENV === "production",
+      httpOnly: NODE_ENV === "production",
+    })
 
     // Hide password field
     delete theaterExist._doc.password;
@@ -138,7 +146,11 @@ export const theaterProfileUpdate = async (req, res, next) => {
 // Controller for logging out the theater
 export const theaterLogout = async (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+    })
     res.json({ message: "Theater logged out successfully" });
   } catch (error) {
     res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
