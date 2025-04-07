@@ -2,6 +2,8 @@ import { Theater } from "../models/theaterModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/token.js";
 
+const NODE_ENV=process.env.NODE_ENV
+
 // Controller for creating a theater
 export const createTheater = async (req, res, next) => {
   try {

@@ -5,7 +5,7 @@ export const getTicket = async (req, res) => {
     try {
         const { ticketId } = req.params;
 
-        const ticket = await Ticket.findById(ticketId);  // Corrected here
+        const ticket = await Ticket.findById(ticketId); 
 
         if (!ticket) {
             return res.status(404).json({ message: "Ticket not found" });
@@ -42,3 +42,19 @@ export const cancelTicket = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error });
     }
 };
+
+
+// Get all tickets of the logged-in user
+export const getUserTickets = async (req, res) => {
+    try {
+      const userId = req.user._id;
+  
+      const tickets = await Ticket.find({ userId }).populate("screeningId");
+  
+      res.status(200).json({ tickets });
+    } catch (error) {
+      console.error("Error fetching user tickets:", error);
+      res.status(500).json({ message: "Internal server error", error });
+    }
+  };
+  

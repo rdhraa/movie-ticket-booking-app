@@ -7,6 +7,7 @@ import { reviewRouter } from "./reviewRoutes.js"
 import { screeningRouter } from "./screeningRoutes.js"
 import { bookingRouter } from "./bookingRoutes.js"
 import { ticketRouter } from "./ticketRoutes.js"
+import {paymentRouter} from "./PaymentRoutes.js"
 const router = e.Router()
 
 router.use("/user",userRouter)
@@ -17,6 +18,7 @@ router.use("/review",reviewRouter)
 router.use("/screening",screeningRouter)
 router.use("/bookings", bookingRouter)
 router.use("/tickets", ticketRouter)
+router.use("/payment",paymentRouter)
 
 
 

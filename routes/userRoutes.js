@@ -7,7 +7,8 @@ import {
   deactivateAccount, 
   deleteAccount, 
   userLogout,
-  checkUser 
+  checkUser ,
+  changePassword
 } from "../controllers/userController.js";
 import { authUser } from "../middlewares/authUser.js";
 import { authAdmin } from "../middlewares/authAdmin.js";
@@ -36,18 +37,12 @@ router.delete("/delete-account",authUser,authAdmin,deleteAccount);
 router.get("/logout", userLogout);
 
 // Check if user is authorized
-router.get("/check",authUser, checkUser);
+router.get("/check-user",authUser, checkUser);
 
-// Forgot password (password reset link)
-router.post("/password-forgot", (req, res) => {
-  // Implement the logic for forgot password (sending reset link)
-  res.json({ message: "Password reset link sent" });
-});
+
 
 // Change password
-router.put("/password-change", (req, res) => {
-  // Implement the logic for changing password
-  res.json({ message: "Password updated successfully" });
-});
+router.put("/password-change", authUser, changePassword);
+
 
 export { router as userRouter };

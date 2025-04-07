@@ -16,7 +16,7 @@ const router = e.Router();
 router.post("/create-screening",authTheater, createScreening);
 
 // Route to get all screenings for a specific film
-router.get("/film/:filmId",authUser,authTheater, getFilmScreenings);
+router.get("/film/:filmId",authUser,getFilmScreenings);
 
 // Route to get all screenings for a specific theater
 router.get("/theater/:theaterId",authUser,authTheater ,getTheaterScreenings);
