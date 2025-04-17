@@ -5,37 +5,35 @@ import { Theater } from "../models/theaterModel.js";
 // Create a new screening
 export const createScreening = async (req, res) => {
     try {
-        const { filmId, theaterId, showtime, availableSeats, price } = req.body;
-
-        // Validate if the film exists
-        const film = await Film.findById(filmId);
-        if (!film) {
-            return res.status(404).json({ message: "Film not found" });
-        }
-
-        // Validate if the theater exists
-        const theater = await Theater.findById(theaterId);
-        if (!theater) {
-            return res.status(404).json({ message: "Theater not found" });
-        }
-
-        // Create a new screening
-        const screening = new Screening({
-            filmId,
-            theaterId,
-            showtime,
-            availableSeats,
-            bookedSeats: 0,
-            price,
-        });
-
-        await screening.save();
-
-        res.status(201).json({ data: screening, message: "Screening created successfully" });
+      const { filmId, showtime, price, screenName } = req.body;
+      const theaterId = req.user.id;
+  
+      const film = await Film.findById(filmId);
+      if (!film) return res.status(404).json({ message: "Film not found" });
+  
+      const theater = await Theater.findById(theaterId);
+      if (!theater) return res.status(404).json({ message: "Theater not found" });
+  
+      const screen = theater.screens.find((s) => s.name === screenName);
+      if (!screen) return res.status(400).json({ message: "Invalid screen name" });
+  
+      const screening = new Screening({
+        filmId,
+        theaterId,
+        screenName,
+        showtime,
+        price,
+        availableSeats: screen.capacity, 
+        bookedSeats: 0,
+      });
+  
+      await screening.save();
+      res.status(201).json({ data: screening, message: "Screening created successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Internal server error", error });
+      res.status(500).json({ message: "Internal server error", error });
     }
-};
+  };
+  
 
 // Get all screenings for a specific film
 export const getFilmScreenings = async (req, res) => {
@@ -43,7 +41,7 @@ export const getFilmScreenings = async (req, res) => {
         const { filmId } = req.params;
 
         // Find all screenings for the film
-        const screenings = await Screening.find({ filmId }).populate('theaterId', 'name').sort({ showtime: 1 });
+        const screenings = await Screening.find({ filmId }).populate('theaterId').sort({ showtime: 1 });
 
         if (!screenings.length) {
             return res.status(404).json({ message: "No screenings found for this film" });
@@ -56,22 +54,26 @@ export const getFilmScreenings = async (req, res) => {
 };
 
 // Get all screenings for a specific theater
+
+
 export const getTheaterScreenings = async (req, res) => {
     try {
-        const { theaterId } = req.params;
-
-        // Find all screenings for the theater
-        const screenings = await Screening.find({ theaterId }).populate('filmId', 'title').sort({ showtime: 1 });
-
-        if (!screenings.length) {
-            return res.status(404).json({ message: "No screenings found for this theater" });
-        }
-
-        res.status(200).json({ data: screenings, message: "Screenings fetched successfully" });
+      const theaterId = req.user.id;
+  
+      const screenings = await Screening.find({ theaterId })
+        .populate("filmId", "title")
+        .sort({ showtime: 1 });
+  
+      if (!screenings.length) {
+        return res.status(404).json({ message: "No screenings found for this theater" });
+      }
+  
+      res.status(200).json({ data: screenings, message: "Screenings fetched successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Internal server error", error });
+      res.status(500).json({ message: "Internal server error", error });
     }
-};
+  };
+  
 
 // Update a screening
 export const updateScreening = async (req, res) => {

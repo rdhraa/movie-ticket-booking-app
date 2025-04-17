@@ -27,7 +27,6 @@ export const addFilm = async (req,res,next)=>{
     try {
         const{title,description,genre,duration,releaseDate,director,cast,language,rating}=req.body;
         const theaterId = req.user.id
-
         
 
         const cloudinaryRes= await cloudinaryInstance.uploader.upload(req.file.path)
@@ -122,5 +121,14 @@ export const deleteFilm = async (req, res, next) => {
     }
 };
 
-
+export const getTheaterFilms = async (req, res) => {
+    try {
+      const theaterId = req.user.id; 
+      const films = await Film.find({ theater:req.user.id }).populate('theater').sort({ createdAt: -1 });
+      res.status(200).json({films});
+    } catch (err) {
+      console.error("Error fetching films:", err);
+      res.status(500).json({ message: "Failed to fetch films" });
+    }
+  };
     

@@ -19,7 +19,7 @@ const router = e.Router();
 router.post("/signup", userSignup);
 
 // Login
-router.put("/login", userLogin);
+router.post("/login", userLogin);
 
 // Get user profile
 router.get("/profile",authUser,userProfile);

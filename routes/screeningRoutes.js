@@ -19,7 +19,7 @@ router.post("/create-screening",authTheater, createScreening);
 router.get("/film/:filmId",authUser,getFilmScreenings);
 
 // Route to get all screenings for a specific theater
-router.get("/theater/:theaterId",authUser,authTheater ,getTheaterScreenings);
+router.get("/my-screenings", authTheater, getTheaterScreenings);
 
 // Route to update a screening by its ID
 router.put("/:screeningId",authTheater, updateScreening);

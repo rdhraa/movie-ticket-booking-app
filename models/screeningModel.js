@@ -11,6 +11,10 @@ const screeningSchema = new Schema({
         ref: 'Theater', 
         required: true,
     },
+    screenName: {
+        type: String,
+        required: true,
+      },
     showtime: {
         type: Date,
         required: true,

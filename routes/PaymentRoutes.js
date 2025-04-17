@@ -37,7 +37,7 @@ router.post("/create-checkout-session", authUser, async (req, res) => {
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
-        success_url: `${client_domain}/user/payment/success`,
+        success_url: `${client_domain}/user/payment/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${client_domain}/user/payment/cancel`,
       });
   
@@ -49,4 +49,22 @@ router.post("/create-checkout-session", authUser, async (req, res) => {
       });
     }
   });
+
+
+  // check payment status
+router.get("/session-status", async (req, res) => {
+  try {
+      const sessionId = req.query.session_id;
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      res.send({
+          data: session,
+          status: session?.status,
+          customer_email: session?.customer_details?.email,
+          session_data: session,
+      });
+  } catch (error) {
+      res.status(error?.statusCode || 500).json(error.message || "internal server error");
+  }
+});
   export { router as paymentRouter };  

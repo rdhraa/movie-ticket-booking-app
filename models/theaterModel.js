@@ -66,6 +66,11 @@ const theaterSchema = new Schema(
         ],
       },
     ],
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
     isActive: {
       type: Boolean,
       default: true,

@@ -1,4 +1,5 @@
 import { Ticket } from "../models/ticketModel.js";
+import { User } from "../models/userModel.js";
 
 // View specific ticket details by ticket number
 export const getTicket = async (req, res) => {
@@ -26,8 +27,6 @@ export const cancelTicket = async (req, res) => {
         if (!ticket) {
             return res.status(404).json({ message: "Ticket not found" });
         }
-
-        // Check if the ticket can be canceled based on its status
         if (ticket.status === "cancelled") {
             return res.status(400).json({ message: "Ticket is already cancelled" });
         }
@@ -47,7 +46,10 @@ export const cancelTicket = async (req, res) => {
 // Get all tickets of the logged-in user
 export const getUserTickets = async (req, res) => {
     try {
-      const userId = req.user._id;
+      const userId = req.user.id; 
+      
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: "User not found" });
   
       const tickets = await Ticket.find({ userId }).populate("screeningId");
   
@@ -57,4 +59,5 @@ export const getUserTickets = async (req, res) => {
       res.status(500).json({ message: "Internal server error", error });
     }
   };
+  
   

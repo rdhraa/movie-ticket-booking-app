@@ -49,6 +49,11 @@ const filmSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  theater: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Theater",
+    required: true,
+  },
   isActive:{
     type:Boolean,
     default:true,

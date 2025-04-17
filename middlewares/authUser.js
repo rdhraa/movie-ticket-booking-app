@@ -18,7 +18,7 @@ export const authUser = (req, res, next) => {
         }
 
         req.user = decodedToken;
-
+        
         //check
         next();
     } catch (error) {
