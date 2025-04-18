@@ -12,6 +12,8 @@ import {
 } from "../controllers/userController.js";
 import { authUser } from "../middlewares/authUser.js";
 import { authAdmin } from "../middlewares/authAdmin.js";
+import { upload } from "../middlewares/multer.js";
+
 
 const router = e.Router();
 
@@ -25,7 +27,7 @@ router.post("/login", userLogin);
 router.get("/profile",authUser,userProfile);
 
 // Update user profile
-router.put("/update",authUser, userProfileUpdate);
+router.put("/update",authUser,upload.single("profilePic"),userProfileUpdate);
 
 // Deactivate user account
 router.put("/deactivate",authUser,authAdmin, deactivateAccount);

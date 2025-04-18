@@ -1,7 +1,7 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/token.js";
-
+import { cloudinaryInstance } from "../Config/cloudinary.js";
 const NODE_ENV=process.env.NODE_ENV
 
 export const userSignup = async (req, res, next) => {
@@ -114,23 +114,39 @@ export const userProfile = async (req, res, next) => {
     }
 };
 
-export const userProfileUpdate = async (req, res, next) => {
+export const userProfileUpdate = async (req, res) => {
     try {
-        const { name, email, password, confirmPassword, mobile, profilePic } = req.body;
+      const { name, email, mobile } = req.body;
 
-        //user Id
-        const userId = req.user.id;
-        const userData = await User.findByIdAndUpdate(
-            userId,
-            { name, email, password, confirmPassword, mobile, profilePic },
-            { new: true }
-        );
-
-        res.json({ data: userData, message: "user profile fetched" });
+      let profilePicUrl;
+      if (req.file) {
+        const cloudinaryRes = await cloudinaryInstance.uploader.upload(req.file.path);
+        profilePicUrl = cloudinaryRes.url;
+      }
+      
+      const userId = req.user.id;
+      
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            ...(name && { name }),
+            ...(email && { email }),
+            ...(mobile && { mobile }),
+            ...(profilePicUrl && { profilePic: profilePicUrl }), 
+          },
+        },
+        { new: true, runValidators: true }
+      ).select("-password");
+      
+  
+      res.json({ data: updatedUser, message: "User profile updated successfully" });
     } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message || "Internal server" });
+      console.error(error);
+      res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
-};
+  };
+  
 
 
 export const userLogout = async (req, res, next) => {
