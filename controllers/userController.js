@@ -174,7 +174,7 @@ export const checkUser = async (req, res, next) => {
 
 export const deactivateAccount = async (req, res, next) => {
     try {
-      const userId = req.user.id; // Get user ID from the request (assuming user is logged in and has a valid token)
+      const userId = req.user.id; 
   
       // Find the user by ID and update their `isActive` field to false
       const updatedUser = await User.findByIdAndUpdate(
@@ -188,7 +188,7 @@ export const deactivateAccount = async (req, res, next) => {
         return res.status(404).json({ message: "User not found" });
       }
   
-      // Optionally, you can also clear the authentication token after deactivation
+      
       res.clearCookie("token");
   
       res.json({ message: "User account has been deactivated successfully" });
@@ -201,7 +201,7 @@ export const deactivateAccount = async (req, res, next) => {
 // Controller for deleting user account
 export const deleteAccount = async (req, res) => {
   try {
-    const userId = req.user.id; // Get the user ID from the authenticated user
+    const userId = req.user.id; 
 
     // Find the user and delete the account
     const deletedUser = await User.findByIdAndDelete(userId);
@@ -210,7 +210,7 @@ export const deleteAccount = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Optionally, clear the authentication token and log the user out
+    
     res.clearCookie("token");
 
     res.json({ message: "User account deleted successfully" });
