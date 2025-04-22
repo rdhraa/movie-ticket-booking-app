@@ -6,27 +6,34 @@ export const addReview = async (req, res, next) => {
         const { filmId, rating, comment } = req.body;
         const userId = req.user.id;
 
-        // Validate if the film exists
+        
         const film = await Film.findById(filmId);
         if (!film) {
             return res.status(404).json({ message: "Film not found" });
         }
-
         if (rating > 5 || rating < 1) {
-            return res.status(400).json({ message: "Please provide a proper rating" });
+            return res.status(400).json({ message: "Please provide a rating between 1 and 5" });
         }
 
-        // Create or update the review
-        const review = await Review.findOneAndUpdate({ userId, filmId }, { rating, comment }, { new: true, upsert: true });
+       
+        if (comment && comment.trim().length > 500) {
+            return res.status(400).json({ message: "Comment is too long (max 500 characters)" });
+        }
 
-        // Optionally, you can update the film's average rating here
+        
+        const review = await Review.findOneAndUpdate(
+            { userId, filmId }, 
+            { rating, comment }, 
+            { new: true, upsert: true } 
+        );
 
-        res.status(201).json({ data: review, message: "Review addedd" });
+        res.status(201).json({ data: review, message: "Review added/updated successfully" });
     } catch (error) {
-
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 };
+
+
 
 export const getFilmReviews = async (req, res) => {
     try {
@@ -34,9 +41,9 @@ export const getFilmReviews = async (req, res) => {
 
         const reviews = await Review.find({ filmId }).populate("userId", "name").sort({ createdAt: -1 });
 
-        if (!reviews.length) {
-            return res.status(404).json({ message: "No reviews found for this film" });
-        }
+        // if (!reviews.length) {
+        //     return res.status(404).json({ message: "No reviews found for this film" });
+        // }
 
         res.status(200).json({ data: reviews, message: "film reviews fetched" });
     } catch (error) {
@@ -82,7 +89,7 @@ export const getAverageRating = async (req, res) => {
 
 export const getUserReviews = async (req, res) => {
     try {
-        const userId = req.params;  
+        const {userId} = req.params;  
 
         // Fetch all reviews made by the specific user
         const reviews = await Review.find( userId ).populate("filmId", "title").sort({ createdAt: -1 });

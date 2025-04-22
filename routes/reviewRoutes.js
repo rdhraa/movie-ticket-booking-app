@@ -4,8 +4,8 @@ import { addReview, deleteReview, getAverageRating, getFilmReviews,getUserReview
 
 const router = e.Router();
 
-//update review,
-//add review
+
+//add review,update
 router.post("/add-review",authUser,addReview)
 
 
@@ -20,7 +20,7 @@ router.get('/film-reviews/:filmId',getFilmReviews)
 router.get("/avg-rating/:filmId",getAverageRating)
 
 
-// get course reviews by specific user
-router.get("/reviews-user", getUserReviews);
+// get film reviews by specific user
+router.get("/reviews-user/:userId", getUserReviews);
 
 export { router as reviewRouter };

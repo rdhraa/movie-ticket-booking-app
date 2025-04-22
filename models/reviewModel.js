@@ -26,6 +26,10 @@ const reviewSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 export const Review = model("Review", reviewSchema);

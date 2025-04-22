@@ -163,14 +163,25 @@ export const userLogout = async (req, res, next) => {
 };
 
 
-export const checkUser = async (req, res, next) => {
-    try {
+// export const checkUser = async (req, res, next) => {
+//     try {
 
-        res.json({  message: "user autherized" });
-    } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message || "Internal server" });
-    }
+//         res.json({  message: "user autherized" });
+//     } catch (error) {
+//         res.status(error.statusCode || 500).json({ message: error.message || "Internal server" });
+//     }
+// };
+export const checkUser = async (req, res, next) => {
+  try {
+    res.json({
+      message: "User authorized",
+      user: req.user, 
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ message: error.message || "Internal server" });
+  }
 };
+
 
 export const deactivateAccount = async (req, res, next) => {
     try {
