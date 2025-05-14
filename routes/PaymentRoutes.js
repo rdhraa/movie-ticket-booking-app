@@ -4,7 +4,7 @@ import { authUser } from "../middlewares/authUser.js";
 
 const router = express.Router();
 const stripe = new Stripe(process.env.Stripe_Private_Api_Key);
-const client_domain = process.env.CLIENT_DOMAIN;
+const client_domain = process.env.CLIENT_DOMAIN || "http://localhost:5173";
 
 router.post("/create-checkout-session", authUser, async (req, res) => {
     try {
